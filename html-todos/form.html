@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add todo · Chooga HTML</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topnav">
+        <div class="brand">Chooga · HTML Todos</div>
+        <nav class="nav-links">
+          <a href="./index.html">List</a>
+          <a href="./form.html">Add todo</a>
+        </nav>
+      </header>
+
+      <section class="host-panel">
+        <details open>
+          <summary>
+            Host bridge <span id="host-status" class="status-pill off">standalone</span>
+          </summary>
+          <div class="stack" style="margin-top: 0.75rem">
+            <div id="host-meta" class="muted">Ready sent: —</div>
+            <div>
+              <strong>Session</strong>
+              <pre id="host-session">null</pre>
+            </div>
+            <div>
+              <strong>User</strong>
+              <pre id="host-user">null</pre>
+            </div>
+            <div>
+              <strong>Safe area</strong>
+              <pre id="host-safe">null</pre>
+            </div>
+            <div>
+              <strong>Last capability</strong>
+              <pre id="host-cap">null</pre>
+            </div>
+            <div class="row">
+              <button type="button" id="btn-identity">Request identity</button>
+              <button type="button" id="btn-phone">Request phone</button>
+              <button type="button" class="secondary" id="btn-docs">Open docs</button>
+              <button type="button" class="secondary" id="btn-close">Close mini-app</button>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <main class="stack">
+        <a href="./index.html">← Back to list</a>
+        <div class="panel stack">
+          <h1>Add todo</h1>
+          <p class="muted">POSTs to JSONPlaceholder (fake create).</p>
+          <form id="todo-form" class="stack">
+            <label>
+              Title
+              <input id="title" name="title" required placeholder="Ship the mini-app demo" />
+            </label>
+            <label>
+              User ID
+              <input id="userId" name="userId" type="number" min="1" value="1" required />
+            </label>
+            <label class="row" style="flex-direction: row; align-items: center">
+              <input id="completed" name="completed" type="checkbox" />
+              Mark completed
+            </label>
+            <button type="submit">Create todo</button>
+          </form>
+          <p id="error" class="error" hidden></p>
+          <div id="result-wrap" hidden>
+            <h3>API response</h3>
+            <pre id="result"></pre>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="./js/chooga-bridge.js"></script>
+    <script src="./js/host-panel.js"></script>
+    <script src="./js/form.js"></script>
+  </body>
+</html>
