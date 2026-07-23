@@ -60,42 +60,126 @@ button.secondary {
 .app-shell {
   max-width: 920px;
   margin: 0 auto;
-  padding: 1rem 1rem 2.5rem;
-}
-
-.topnav {
+  min-height: 100vh;
+  padding: 1rem 1rem 5.5rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.2rem;
+  flex-direction: column;
 }
 
-.brand {
-  display: inline-flex;
+.app-main {
+  flex: 1;
+}
+
+.app-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.15rem;
+  padding: 0.45rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-top: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.app-nav .nav-item {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 800;
+  gap: 0.2rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.app-nav .nav-item.on {
   color: var(--ember-deep);
+  background: color-mix(in srgb, var(--ember) 10%, transparent);
 }
 
-.mark {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 10px;
+.nav-icon-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.nav-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--ember);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
   display: grid;
   place-items: center;
-  background: var(--ember);
-  color: #fff7ed;
-  font-size: 0.72rem;
+  line-height: 1;
 }
 
-.nav-links {
+.welcome-page {
+  padding-top: 0.5rem;
+  gap: 1.25rem;
+}
+
+.menu-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.menu-card {
   display: flex;
-  gap: 0.65rem;
-  flex-wrap: wrap;
   align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.menu-card.soft {
+  opacity: 0.85;
+}
+
+.menu-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--ember) 12%, var(--surface));
+  color: var(--ember-deep);
+  flex-shrink: 0;
+}
+
+.menu-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.menu-copy strong {
+  font-size: 1rem;
 }
 
 .stack { display: flex; flex-direction: column; gap: 0.85rem; }
@@ -106,25 +190,6 @@ button.secondary {
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 1.1rem;
-}
-
-.welcome-hero {
-  min-height: 78vh;
-  display: grid;
-  align-items: end;
-  border-radius: 24px;
-  overflow: hidden;
-  background:
-    linear-gradient(180deg, transparent 20%, var(--clay) 80%),
-    linear-gradient(145deg, #9a3412 0%, #78350f 40%, #292524 100%);
-}
-
-.welcome-card {
-  margin: 0.75rem;
-  padding: 1.25rem;
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  border: 1px solid var(--line);
 }
 
 .eyebrow {
@@ -146,10 +211,6 @@ h1, h2, h3 {
 .lede { margin: 0; color: var(--muted); font-size: 1.05rem; }
 .muted { color: var(--muted); }
 .error { color: var(--danger); }
-
-.choice-grid { display: grid; gap: 0.65rem; }
-.choice-grid button,
-.choice-grid .button { width: 100%; text-align: center; }
 
 a.button {
   appearance: none;

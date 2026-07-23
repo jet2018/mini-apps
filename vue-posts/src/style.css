@@ -65,37 +65,94 @@ button.ghost,
 .app-shell {
   max-width: 720px;
   margin: 0 auto;
-  padding: 1rem 1rem 2.5rem;
-}
-
-.topnav {
+  min-height: 100vh;
+  padding: 1rem 1rem 5.5rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
+  flex-direction: column;
 }
 
-.brand {
-  display: inline-flex;
+.app-main { flex: 1; }
+
+.app-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.15rem;
+  padding: 0.45rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-top: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.app-nav .nav-item {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.55rem;
-  font-weight: 800;
+  gap: 0.2rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.app-nav .nav-item.on {
   color: var(--green-deep);
-  letter-spacing: -0.02em;
+  background: color-mix(in srgb, var(--green) 10%, transparent);
 }
 
-.mark {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
+.welcome-page {
+  padding-top: 0.5rem;
+  gap: 1.25rem;
+}
+
+.menu-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.menu-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
   display: grid;
   place-items: center;
-  background: var(--green);
-  color: var(--gold);
-  font-size: 0.72rem;
-  font-weight: 800;
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  color: var(--green-deep);
+  flex-shrink: 0;
+}
+
+.menu-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .nav-links {
@@ -115,28 +172,6 @@ button.ghost,
   border-radius: 18px;
   padding: 1.1rem;
   box-shadow: 0 10px 30px rgba(20, 32, 26, 0.04);
-}
-
-.welcome-hero {
-  min-height: 78vh;
-  display: grid;
-  align-items: end;
-  padding: 2rem 0 1rem;
-  background:
-    linear-gradient(180deg, transparent 20%, var(--sand) 78%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect fill='%23063d28' width='800' height='500'/%3E%3Cpath fill='%230b5c3b' d='M0 320c80-40 160-40 240 0s160 40 240 0 160-40 240 0 80 40 80 40V500H0z'/%3E%3Ccircle fill='%23c9a227' cx='640' cy='90' r='36'/%3E%3Cpath stroke='%23c9a227' stroke-width='3' fill='none' d='M80 180c120-60 200-20 280 10s180 40 280-20'/%3E%3C/svg%3E")
-      center top / cover no-repeat;
-  border-radius: 24px;
-  overflow: hidden;
-}
-
-.welcome-copy {
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(8px);
-  border-radius: 18px;
-  padding: 1.25rem;
-  margin: 0 0.75rem 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
 }
 
 .eyebrow {
@@ -160,13 +195,6 @@ h1, h2 {
 .tiny { font-size: 0.82rem; }
 .error { color: var(--danger); }
 .arrow { color: var(--gold); padding: 0 0.25rem; }
-
-.choice-grid {
-  display: grid;
-  gap: 0.65rem;
-}
-
-.choice-grid button { width: 100%; }
 
 label {
   display: flex;

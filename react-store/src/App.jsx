@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
-import {Link, Route, Routes, useLocation} from 'react-router-dom';
-import ChoogaBridge, {startBridge} from './bridge.js';
+import {Route, Routes} from 'react-router-dom';
+import {startBridge} from './bridge.js';
 import {getCart, subscribeCart} from './cart.js';
+import AppNav from './components/AppNav.jsx';
 import Welcome from './pages/Welcome.jsx';
 import ProductList from './pages/ProductList.jsx';
 import ProductDetails from './pages/ProductDetails.jsx';
@@ -10,9 +11,7 @@ import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import './index.css';
 
 export default function App() {
-  const location = useLocation();
   const [cartCount, setCartCount] = useState(() => getCart().cartCount);
-  const showChrome = location.pathname !== '/';
 
   useEffect(() => {
     startBridge();
@@ -22,32 +21,16 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      {showChrome ? (
-        <header className="topnav">
-          <Link to="/" className="brand">
-            <span className="mark">BM</span>
-            Bole Mart
-          </Link>
-          <nav className="nav-links">
-            <Link to="/products">Market</Link>
-            <Link to="/checkout">Cart ({cartCount})</Link>
-            <button
-              type="button"
-              className="ghost"
-              onClick={() => ChoogaBridge.close()}>
-              Close
-            </button>
-          </nav>
-        </header>
-      ) : null}
-
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/paid" element={<PaymentSuccess />} />
-      </Routes>
+      <div className="app-main">
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/paid" element={<PaymentSuccess />} />
+        </Routes>
+      </div>
+      <AppNav cartCount={cartCount} />
     </div>
   );
 }

@@ -1,13 +1,8 @@
 (function () {
-  var ChoogaBridge = window.ChoogaDemo.startBridge();
+  window.ChoogaDemo.startBridge();
   var params = new URLSearchParams(window.location.search);
   var id = params.get('id');
   var formatEtb = window.ChoogaDemo.formatEtb;
-  var closeBtn = document.getElementById('btn-close');
-
-  closeBtn.addEventListener('click', function () {
-    ChoogaBridge.close();
-  });
 
   var group = window.EQUB_DATA.groups.find(function (g) {
     return g.id === id;
@@ -24,8 +19,7 @@
   document.getElementById('amount').textContent = formatEtb(
     payment.amount != null ? payment.amount : group.contribution,
   );
-  document.getElementById('reference').textContent =
-    payment.reference || '—';
+  document.getElementById('reference').textContent = payment.reference || '—';
   document.getElementById('blurb').textContent =
     'Round ' +
     group.round +

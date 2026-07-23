@@ -3,14 +3,9 @@
   var params = new URLSearchParams(window.location.search);
   var id = params.get('id');
   var formatEtb = window.ChoogaDemo.formatEtb;
-  var closeBtn = document.getElementById('btn-close');
   var payBtn = document.getElementById('pay-btn');
   var msg = document.getElementById('msg');
   var back = document.getElementById('back-link');
-
-  closeBtn.addEventListener('click', function () {
-    ChoogaBridge.close();
-  });
 
   var group = window.EQUB_DATA.groups.find(function (g) {
     return g.id === id;

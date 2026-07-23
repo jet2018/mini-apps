@@ -1,15 +1,10 @@
 (function () {
-  var ChoogaBridge = window.ChoogaDemo.startBridge();
+  window.ChoogaDemo.startBridge();
   var params = new URLSearchParams(window.location.search);
   var id = params.get('id');
   var statusEl = document.getElementById('status');
   var detailEl = document.getElementById('detail');
-  var closeBtn = document.getElementById('btn-close');
   var formatEtb = window.ChoogaDemo.formatEtb;
-
-  closeBtn.addEventListener('click', function () {
-    ChoogaBridge.close();
-  });
 
   var group = window.EQUB_DATA.groups.find(function (g) {
     return g.id === id;

@@ -1,12 +1,7 @@
 (function () {
-  var ChoogaBridge = window.ChoogaDemo.startBridge();
+  window.ChoogaDemo.startBridge();
   var listEl = document.getElementById('list');
-  var closeBtn = document.getElementById('btn-close');
   var formatEtb = window.ChoogaDemo.formatEtb;
-
-  closeBtn.addEventListener('click', function () {
-    ChoogaBridge.close();
-  });
 
   listEl.innerHTML = window.EQUB_DATA.groups
     .map(function (g) {
