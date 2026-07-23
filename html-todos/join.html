@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contribute · Tena Equb</title>
+    <title>Browse equbs · Tena Equb</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
@@ -12,26 +12,23 @@
         <a class="brand" href="./index.html"><span class="mark">TE</span> Tena Equb</a>
         <nav class="nav-links">
           <a href="./list.html">My equbs</a>
+          <a href="./join.html">Join</a>
           <button type="button" class="ghost" id="btn-close">Close</button>
         </nav>
       </header>
 
       <main class="stack">
-        <a id="back-link" href="./list.html">← Back</a>
-        <div class="panel stack">
-          <p class="eyebrow">Round contribution</p>
-          <h1 id="title">Contribute</h1>
-          <p id="blurb" class="muted"></p>
-          <p class="fare-lg" id="amount">—</p>
-          <button type="button" id="pay-btn">Pay with Awash PIN</button>
-          <p id="msg" class="muted tiny"></p>
+        <div>
+          <h1>Open circles</h1>
+          <p class="muted">Demo groups you can join in this mini-app</p>
         </div>
+        <div id="list" class="stack"></div>
       </main>
     </div>
 
     <script src="https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js"></script>
     <script src="./js/bridge.js"></script>
     <script src="./js/data.js"></script>
-    <script src="./js/form.js"></script>
+    <script src="./js/join.js"></script>
   </body>
 </html>

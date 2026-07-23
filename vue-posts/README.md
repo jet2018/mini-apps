@@ -1,6 +1,6 @@
-# Chooga Vue Posts
+# Habesha Airways (vue-posts)
 
-Vite + Vue 3 mini-app demo (JSONPlaceholder posts + Chooga bridge).
+Ethiopian domestic / regional flight booking demo for Awash Superapp.
 
 ```bash
 npm install
@@ -8,4 +8,4 @@ npm run dev
 npm run build
 ```
 
-See the [root README](../README.md) for Netlify deploy and Chooga catalog registration.
+See the [root README](../README.md).

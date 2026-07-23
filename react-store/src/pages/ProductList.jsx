@@ -1,54 +1,43 @@
-import {useEffect, useState} from 'react';
+import {useMemo, useState} from 'react';
 import {Link} from 'react-router-dom';
-import ChoogaBridge, {startBridge} from '../bridge.js';
+import {CATEGORIES, formatEtb, listProducts} from '../data/catalog.js';
+import {startBridge} from '../bridge.js';
 
-const API = 'https://fakestoreapi.com/products';
+startBridge();
 
 export default function ProductList() {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    startBridge();
-    let cancelled = false;
-    (async () => {
-      ChoogaBridge.showProgress({message: 'Loading products…'});
-      try {
-        const res = await fetch(API);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (!cancelled) setProducts(data);
-      } catch (e) {
-        if (!cancelled) setError(e.message || 'Failed to load products');
-      } finally {
-        ChoogaBridge.dismissProgress();
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      ChoogaBridge.dismissProgress();
-    };
-  }, []);
-
-  if (loading) return <p className="muted">Loading products…</p>;
-  if (error) return <p className="error">Error: {error}</p>;
+  const [category, setCategory] = useState('all');
+  const products = useMemo(() => listProducts(category), [category]);
 
   return (
     <div className="stack">
       <div>
-        <h1>Products</h1>
-        <p className="muted">Tap a product to add it to your host cart.</p>
+        <h1>Market</h1>
+        <p className="muted">Staged catalog · prices in Ethiopian Birr</p>
       </div>
+
+      <div className="chips">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            type="button"
+            className={category === cat ? 'chip on' : 'chip'}
+            onClick={() => setCategory(cat)}>
+            {cat === 'all' ? 'All' : cat}
+          </button>
+        ))}
+      </div>
+
       <div className="card-grid">
         {products.map(p => (
           <Link key={p.id} to={`/product/${p.id}`} className="card">
-            <img src={p.image} alt={p.title} />
+            <img src={p.image} alt="" />
             <div className="card-body">
               <strong>{p.title}</strong>
-              <span className="muted">{p.category}</span>
-              <span className="price">${Number(p.price).toFixed(2)}</span>
+              <span className="muted">
+                {p.seller} · {p.unit}
+              </span>
+              <span className="price">{formatEtb(p.price)}</span>
             </div>
           </Link>
         ))}

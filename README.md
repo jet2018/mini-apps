@@ -1,62 +1,53 @@
-# Chooga demo mini-apps
+# Chooga demo mini-apps (Ethiopian market)
 
-Three Netlify-ready mini-apps for Awash Birr Pro’s Superapp host. Each boots on **`@jetezra/bridge@0.0.2`**, greets the host user by name, and only uses real product actions (progress, toast, cart, PIN payments)—no HostPanel / bridge playground.
+Three Netlify-ready mini-apps shaped like real Awash Superapp partners — local commerce, flights, and equb savings. All use **`@jetezra/bridge@0.0.2`**, greet the host user by name, and settle money with **Awash PIN** (`payments.initiate`). Data is staged (no live airline/equb APIs).
 
-| App | Stack | Dummy API | Flow |
-|-----|--------|-----------|------|
-| [`react-store`](./react-store) | Vite + React | [Fake Store](https://fakestoreapi.com) | Welcome → products → cart → `payments.initiate` (PIN) |
-| [`vue-posts`](./vue-posts) | Vite + Vue 3 | [JSONPlaceholder](https://jsonplaceholder.typicode.com) posts | Welcome → browse / compose |
-| [`html-todos`](./html-todos) | Plain HTML/CSS/JS | JSONPlaceholder todos | Welcome → list / add |
+| Folder (deploy root) | Product | Flow |
+|----------------------|---------|------|
+| [`react-store`](./react-store) | **Bole Mart** — Merkato-style shop | Welcome → catalog (ETB) → cart → PIN checkout |
+| [`vue-posts`](./vue-posts) | **Habesha Airways** — flight booking | Welcome → search → results → passenger → PIN ticket |
+| [`html-todos`](./html-todos) | **Tena Equb** — rotating savings (eQUB-style) | Welcome → my equbs → contribute → PIN |
 
-## Bridge
+Branding is **demo-inspired** (not official Ethiopian Airlines / eQUB / Kacha apps).
 
-- **Vite apps:** `npm install @jetezra/bridge@0.0.2` → `import ChoogaBridge from '@jetezra/bridge'`
-- **HTML:** CDN `https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js`
-- **Browser demos:** `mockHost({…})` before `init()` when not inside `ReactNativeWebView`
-- Host injects session, user, theme, safe area, hostInfo after `chooga.ready`
+## Why these three
 
-## Welcome → product
+- **Bole Mart** — everyday retail + host cart + PIN (replaces generic Fake Store).
+- **Habesha Airways** — high-trust booking with staged ADD/Bahir Dar/DXB routes (replaces blog posts).
+- **Tena Equb** — uniquely Ethiopian ROSCA / equb contribution with PIN (replaces todos; stands in for eQUB-class services; Kacha-like bill pay can be a follow-on).
 
-1. Welcome greets `user.display_name` / `user.name` and offers choose-how-to-proceed.
-2. Product screens call host APIs only as needed (`showProgress`, `toast`, `cart.*`, `payments.initiate`, `close`).
-3. **react-store** owns the PIN path: checkout → `payments.initiate` → host `PinScreenModal` → success bag (no live debit in this pass).
+## Bridge & permissions
 
-## Catalog permissions
+| App | Suggested `requested_permissions` |
+|-----|-----------------------------------|
+| Bole Mart | `payments.initiate`, `cart`, `host.progress`, `host.toast`, `user.identity`, `host.close` |
+| Habesha Airways | `payments.initiate`, `host.toast`, `user.identity`, `host.close` |
+| Tena Equb | `payments.initiate`, `host.toast`, `user.identity`, `host.close` |
 
-Suggested `requested_permissions` when registering in Chooga:
-
-| App | Permissions |
-|-----|-------------|
-| react-store | `payments.initiate`, `cart`, `host.progress`, `host.toast`, `wallet.pick`, `user.identity`, `host.close` |
-| vue-posts | `host.progress`, `host.toast`, `user.identity`, `host.close` |
-| html-todos | `host.progress`, `host.toast`, `user.identity`, `host.close` |
-
-Also set `bridge_version` to `1`, `requires_auth` to `true`, and `web_view_base_url` / `allowed_origins` to each Netlify origin.
+CDN (HTML): `https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js`  
+Browser demos: `mockHost` before `init` when not in `ReactNativeWebView`.
 
 ## Local run
 
 ```bash
-# React
-cd react-store && npm install && npm run dev
-
-# Vue
-cd vue-posts && npm install && npm run dev
-
-# HTML (any static server)
-cd html-todos && npx serve .
+cd react-store && npm install && npm run dev   # Bole Mart
+cd vue-posts && npm install && npm run dev     # Habesha Airways
+cd html-todos && npx serve .                   # Tena Equb
 ```
 
 ## Netlify
 
-| Site base | Build | Publish |
-|-----------|-------|---------|
+| Base | Build | Publish |
+|------|-------|---------|
 | `react-store` | `npm run build` | `dist` |
 | `vue-posts` | `npm run build` | `dist` |
 | `html-todos` | *(none)* | `.` |
 
-## Test in Awash
+After deploy, point Chooga `web_view_base_url` / `allowed_origins` at each origin and refresh the Awash Superapp catalog.
 
-1. Register / update the three mini-apps in Chooga; sync Superapp catalog.
-2. Open an app → **Welcome, {name}** with path choices (no HostPanel).
-3. Store: add to cart → checkout → enter PIN → success result.
-4. Posts / todos: list and compose with host progress / toast.
+## Test checklist
+
+1. Open each app → **Welcome, {name}** with real path choices (no HostPanel).
+2. Bole Mart: add Yirgacheffe → checkout → PIN → success.
+3. Habesha Airways: ADD → Bahir Dar → select flight → PIN → PNR ticket.
+4. Tena Equb: open Bole Office Circle → contribute → PIN → “Paid this round”.

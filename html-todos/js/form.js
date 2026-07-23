@@ -1,59 +1,73 @@
 (function () {
   var ChoogaBridge = window.ChoogaDemo.startBridge();
-  var form = document.getElementById('todo-form');
-  var errorEl = document.getElementById('error');
-  var resultWrap = document.getElementById('result-wrap');
-  var resultEl = document.getElementById('result');
-  var authorEl = document.getElementById('author-name');
-  var submitBtn = document.getElementById('submit-btn');
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var formatEtb = window.ChoogaDemo.formatEtb;
   var closeBtn = document.getElementById('btn-close');
+  var payBtn = document.getElementById('pay-btn');
+  var msg = document.getElementById('msg');
+  var back = document.getElementById('back-link');
 
   closeBtn.addEventListener('click', function () {
     ChoogaBridge.close();
   });
 
-  function paintUser(state) {
-    authorEl.textContent = window.ChoogaDemo.displayNameFromUser(state.user);
+  var group = window.EQUB_DATA.groups.find(function (g) {
+    return g.id === id;
+  });
+
+  if (!group) {
+    document.getElementById('title').textContent = 'Equb not found';
+    payBtn.disabled = true;
+    return;
   }
 
-  paintUser(ChoogaBridge.getState());
-  ChoogaBridge.subscribe(paintUser);
+  back.href = './details.html?id=' + encodeURIComponent(group.id);
+  document.getElementById('title').textContent = group.name;
+  document.getElementById('blurb').textContent =
+    'Round ' + group.round + ' of ' + group.totalRounds + ' · due ' + group.nextDue;
+  document.getElementById('amount').textContent = formatEtb(group.contribution);
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    errorEl.hidden = true;
-    resultWrap.hidden = true;
-    submitBtn.disabled = true;
+  if (window.EqubStore.isPaid(group.id) || group.yourStatus === 'paid') {
+    payBtn.disabled = true;
+    payBtn.textContent = 'Already paid';
+    msg.textContent = 'This round is settled on this device.';
+  }
 
-    var payload = {
-      title: document.getElementById('title').value,
-      userId: 1,
-      completed: document.getElementById('completed').checked,
-    };
+  payBtn.addEventListener('click', function () {
+    if (payBtn.disabled) return;
+    payBtn.disabled = true;
+    payBtn.textContent = 'Waiting for PIN…';
+    msg.textContent = '';
 
-    ChoogaBridge.showProgress({ message: 'Creating todo…' });
-    fetch('https://jsonplaceholder.typicode.com/todos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-      body: JSON.stringify(payload),
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
+    ChoogaBridge.payments
+      .initiate({
+        amount: group.contribution,
+        currency: 'ETB',
+        reference: 'EQUB_' + group.id + '_' + Date.now().toString(36),
+        description: group.name + ' · round ' + group.round,
+        metadata: {equbId: group.id, round: group.round},
       })
-      .then(function (data) {
-        resultEl.textContent = JSON.stringify(data, null, 2);
-        resultWrap.hidden = false;
-        ChoogaBridge.toast('Todo created', 'success');
+      .then(function (payment) {
+        if (payment && payment.ok === false) {
+          msg.textContent = payment.reason || 'Payment cancelled';
+          ChoogaBridge.toast(msg.textContent, 'error');
+          payBtn.disabled = false;
+          payBtn.textContent = 'Pay with Awash PIN';
+          return;
+        }
+        window.EqubStore.markPaid(group.id, {
+          at: new Date().toISOString(),
+          payment: payment,
+        });
+        ChoogaBridge.toast('Contribution recorded', 'success');
+        window.location.href = './details.html?id=' + encodeURIComponent(group.id);
       })
-      .catch(function (err) {
-        errorEl.textContent = 'Error: ' + (err.message || 'Failed to create');
-        errorEl.hidden = false;
-        ChoogaBridge.toast(errorEl.textContent, 'error');
-      })
-      .finally(function () {
-        ChoogaBridge.dismissProgress();
-        submitBtn.disabled = false;
+      .catch(function (e) {
+        msg.textContent = (e && e.message) || 'Payment failed';
+        ChoogaBridge.toast(msg.textContent, 'error');
+        payBtn.disabled = false;
+        payBtn.textContent = 'Pay with Awash PIN';
       });
   });
 })();

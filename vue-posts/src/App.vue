@@ -12,17 +12,18 @@ const showChrome = computed(() => route.path !== '/');
 <template>
   <div class="app-shell">
     <header v-if="showChrome" class="topnav">
-      <div class="brand">Chooga · Vue Posts</div>
+      <RouterLink to="/" class="brand">
+        <span class="mark">HA</span>
+        Habesha Airways
+      </RouterLink>
       <nav class="nav-links">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/posts">Posts</RouterLink>
-        <RouterLink to="/compose">Compose</RouterLink>
-        <button type="button" class="secondary" @click="ChoogaBridge.close()">
+        <RouterLink to="/search">Search</RouterLink>
+        <RouterLink to="/bookings">Bookings</RouterLink>
+        <button type="button" class="ghost" @click="ChoogaBridge.close()">
           Close
         </button>
       </nav>
     </header>
-
     <RouterView />
   </div>
 </template>

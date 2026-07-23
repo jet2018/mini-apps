@@ -22,9 +22,20 @@ export const startBridge = () => {
           name: 'Ada Lovelace',
         },
         theme: {mode: 'light', primary_color: '#0f766e'},
-        capabilities: ['host.progress', 'host.toast', 'host.confirm'],
+        capabilities: [
+          'payments',
+          'payments.initiate',
+          'host.progress',
+          'host.toast',
+          'host.confirm',
+        ],
         activities: ['host.confirm'],
-        granted: ['host.progress', 'host.toast', 'user.identity'],
+        granted: [
+          'payments.initiate',
+          'host.progress',
+          'host.toast',
+          'user.identity',
+        ],
       },
     });
   }

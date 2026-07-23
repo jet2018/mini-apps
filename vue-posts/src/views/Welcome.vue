@@ -17,27 +17,25 @@ const name = computed(() => displayNameFromUser(bridge.value.user));
 </script>
 
 <template>
-  <div class="stack welcome-panel">
-    <div class="panel stack">
-      <p class="eyebrow">Chooga Posts</p>
+  <div class="welcome-hero">
+    <div class="welcome-copy stack">
+      <p class="eyebrow">Habesha Airways</p>
       <h1>Welcome, {{ name }}</h1>
-      <p class="muted">
-        {{
-          bridge.hostConnected
-            ? 'You are signed in through Awash. Choose how you want to continue.'
-            : 'Running in demo mode. Choose how you want to continue.'
-        }}
+      <p class="lede">
+        Book domestic and regional flights — pay securely with your Awash PIN.
       </p>
       <div class="choice-grid">
-        <button type="button" @click="router.push('/posts')">Browse posts</button>
-        <button type="button" class="secondary" @click="router.push('/compose')">
-          Compose a post
+        <button type="button" @click="router.push('/search')">
+          Search flights
+        </button>
+        <button type="button" class="secondary" @click="router.push('/bookings')">
+          My bookings
         </button>
       </div>
       <button
         v-if="bridge.hostConnected"
         type="button"
-        class="secondary"
+        class="ghost"
         @click="ChoogaBridge.close()"
       >
         Close mini-app

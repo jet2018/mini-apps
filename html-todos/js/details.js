@@ -5,69 +5,80 @@
   var statusEl = document.getElementById('status');
   var detailEl = document.getElementById('detail');
   var closeBtn = document.getElementById('btn-close');
+  var formatEtb = window.ChoogaDemo.formatEtb;
 
   closeBtn.addEventListener('click', function () {
     ChoogaBridge.close();
   });
 
-  if (!id) {
+  var group = window.EQUB_DATA.groups.find(function (g) {
+    return g.id === id;
+  });
+
+  if (!group) {
     statusEl.className = 'error';
-    statusEl.textContent = 'Missing ?id= query parameter';
+    statusEl.textContent = 'Equb not found';
     return;
   }
 
-  ChoogaBridge.showProgress({ message: 'Loading todo…' });
-  Promise.all([
-    fetch('https://jsonplaceholder.typicode.com/todos/' + id).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }),
-  ])
-    .then(function (results) {
-      var todo = results[0];
-      return fetch('https://jsonplaceholder.typicode.com/users/' + todo.userId)
-        .then(function (res) {
-          return res.ok ? res.json() : null;
-        })
-        .then(function (user) {
-          return { todo: todo, user: user };
-        });
-    })
-    .then(function (payload) {
-      var todo = payload.todo;
-      var user = payload.user;
-      statusEl.hidden = true;
-      detailEl.hidden = false;
-      detailEl.innerHTML =
-        '<h1>#' +
-        todo.id +
-        ' · ' +
-        escapeHtml(todo.title) +
-        '</h1>' +
-        '<p><span class="badge ' +
-        (todo.completed ? 'ok' : 'no') +
-        '">' +
-        (todo.completed ? 'completed' : 'incomplete') +
-        '</span></p>' +
-        '<p class="muted">User #' +
-        todo.userId +
-        (user ? ' · ' + escapeHtml(user.name) + ' (' + escapeHtml(user.email) + ')' : '') +
-        '</p>';
-    })
-    .catch(function (e) {
-      statusEl.className = 'error';
-      statusEl.textContent = 'Error: ' + (e.message || 'Failed to load');
-      ChoogaBridge.toast(statusEl.textContent, 'error');
-    })
-    .finally(function () {
-      ChoogaBridge.dismissProgress();
-    });
+  var paid =
+    window.EqubStore.isPaid(group.id) || group.yourStatus === 'paid';
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  statusEl.hidden = true;
+  detailEl.hidden = false;
+  detailEl.innerHTML =
+    '<div class="panel stack">' +
+    '<p class="eyebrow">' +
+    group.type +
+    ' equb</p>' +
+    '<h1>' +
+    group.name +
+    '</h1>' +
+    '<p class="lede">' +
+    group.description +
+    '</p>' +
+    '<div class="stat-row">' +
+    '<div><span class="muted">Contribution</span><strong>' +
+    formatEtb(group.contribution) +
+    '</strong></div>' +
+    '<div><span class="muted">Pot this round</span><strong>' +
+    formatEtb(group.pot) +
+    '</strong></div>' +
+    '<div><span class="muted">Next due</span><strong>' +
+    group.nextDue +
+    '</strong></div>' +
+    '<div><span class="muted">Round</span><strong>' +
+    group.round +
+    ' / ' +
+    group.totalRounds +
+    '</strong></div>' +
+    '</div>' +
+    (paid
+      ? '<p class="badge ok">You are paid for this round</p>'
+      : '<a class="button" href="./form.html?id=' +
+        encodeURIComponent(group.id) +
+        '">Contribute ' +
+        formatEtb(group.contribution) +
+        '</a>') +
+    '</div>' +
+    '<div class="panel stack">' +
+    '<h2>Members</h2>' +
+    group.membersPreview
+      .map(function (m) {
+        return (
+          '<div class="member-row">' +
+          '<div><strong>' +
+          m.name +
+          '</strong><span class="muted"> · ' +
+          m.role +
+          '</span></div>' +
+          '<span class="badge ' +
+          (m.paid ? 'ok' : 'due') +
+          '">' +
+          (m.paid ? 'Paid' : 'Due') +
+          '</span></div>'
+        );
+      })
+      .join('') +
+    '</div>';
 })();

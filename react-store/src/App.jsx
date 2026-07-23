@@ -16,20 +16,14 @@ export default function App() {
     startBridge();
     const unsub = ChoogaBridge.subscribe(state => {
       const count = state.params?.cartCount;
-      if (typeof count === 'number') {
-        setCartCount(count);
-      }
+      if (typeof count === 'number') setCartCount(count);
     });
     const stopCart = ChoogaBridge.on('cart.updated', detail => {
-      if (detail?.cartCount != null) {
-        setCartCount(detail.cartCount);
-      }
+      if (detail?.cartCount != null) setCartCount(detail.cartCount);
     });
     ChoogaBridge.call('cart.get', {})
       .then(res => {
-        if (res?.cartCount != null) {
-          setCartCount(res.cartCount);
-        }
+        if (res?.cartCount != null) setCartCount(res.cartCount);
       })
       .catch(() => {});
     return () => {
@@ -42,14 +36,16 @@ export default function App() {
     <div className="app-shell">
       {showChrome ? (
         <header className="topnav">
-          <div className="brand">Chooga · React Store</div>
+          <Link to="/" className="brand">
+            <span className="mark">BM</span>
+            Bole Mart
+          </Link>
           <nav className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/products">Products</Link>
+            <Link to="/products">Market</Link>
             <Link to="/checkout">Cart ({cartCount})</Link>
             <button
               type="button"
-              className="secondary"
+              className="ghost"
               onClick={() => ChoogaBridge.close()}>
               Close
             </button>

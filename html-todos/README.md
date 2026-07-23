@@ -1,10 +1,9 @@
-# Chooga HTML Todos
+# Tena Equb (html-todos)
 
-Plain HTML/JS mini-app demo (JSONPlaceholder todos + Chooga bridge).
+eQUB-style rotating savings mini-app — staged circles, contribute with Awash PIN.
 
 ```bash
 npx serve .
-# or: python3 -m http.server 5175
 ```
 
-See the [root README](../README.md) for Netlify deploy and Chooga catalog registration.
+See the [root README](../README.md).
