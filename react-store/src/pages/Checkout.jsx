@@ -54,7 +54,6 @@ export default function Checkout() {
     }
     setPaying(true);
     setResult(null);
-    ChoogaBridge.showProgress({message: 'Preparing payment…'});
     try {
       const payment = await ChoogaBridge.payments.initiate({
         amount: totalLabel,
@@ -76,7 +75,6 @@ export default function Checkout() {
       setResult(payload);
       ChoogaBridge.toast(payload.reason || 'Payment failed', 'error');
     } finally {
-      ChoogaBridge.dismissProgress();
       setPaying(false);
     }
   };
