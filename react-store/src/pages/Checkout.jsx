@@ -1,27 +1,22 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import ChoogaBridge, {displayNameFromUser, startBridge} from '../bridge.js';
+import {clearCart, getCart, subscribeCart} from '../cart.js';
 import {formatEtb} from '../data/catalog.js';
 
 export default function Checkout() {
+  const navigate = useNavigate();
   const [bridge, setBridge] = useState(() => ChoogaBridge.getState());
-  const [cart, setCart] = useState({items: [], cartCount: 0, total: 0});
+  const [cart, setCart] = useState(() => getCart());
   const [paying, setPaying] = useState(false);
-  const [result, setResult] = useState(null);
 
   const name = displayNameFromUser(bridge.user);
 
   useEffect(() => {
     startBridge();
     const unsub = ChoogaBridge.subscribe(setBridge);
-    const stopCart = ChoogaBridge.on('cart.updated', detail => {
-      if (detail?.items) setCart(detail);
-    });
-    ChoogaBridge.call('cart.get', {})
-      .then(snapshot => {
-        if (snapshot?.items) setCart(snapshot);
-      })
-      .catch(() => {});
+    setCart(getCart());
+    const stopCart = subscribeCart(setCart);
     return () => {
       unsub();
       stopCart();
@@ -43,27 +38,28 @@ export default function Checkout() {
       return;
     }
     setPaying(true);
-    setResult(null);
+    const itemCount = cart.cartCount || cart.items.length;
+    const amount = totalLabel;
     try {
       const payment = await ChoogaBridge.payments.initiate({
-        amount: totalLabel,
+        amount,
         currency: 'ETB',
         reference: `bole_${Date.now().toString(36)}`,
         description: `Bole Mart · ${name}`,
-        metadata: {itemCount: cart.cartCount || cart.items.length},
+        metadata: {itemCount},
       });
-      setResult(payment);
-      if (payment?.ok !== false) {
-        await ChoogaBridge.call('cart.clear', {}).catch(() => {});
-        setCart({items: [], cartCount: 0, total: 0});
-        ChoogaBridge.toast('Payment authorized', 'success');
-      } else {
+      if (payment?.ok === false) {
         ChoogaBridge.toast(payment?.reason || 'Payment cancelled', 'error');
+        return;
       }
+      clearCart();
+      navigate('/paid', {
+        replace: true,
+        state: {payment, amount, itemCount},
+      });
     } catch (e) {
-      const payload = e?.result || {ok: false, reason: e?.message || 'failed'};
-      setResult(payload);
-      ChoogaBridge.toast(payload.reason || 'Payment failed', 'error');
+      const reason = e?.result?.reason || e?.message || 'Payment failed';
+      ChoogaBridge.toast(reason, 'error');
     } finally {
       setPaying(false);
     }
@@ -106,21 +102,13 @@ export default function Checkout() {
             type="button"
             className="secondary"
             disabled={!cart.items.length}
-            onClick={async () => {
-              await ChoogaBridge.call('cart.clear', {});
-              setCart({items: [], cartCount: 0, total: 0});
+            onClick={() => {
+              clearCart();
               ChoogaBridge.toast('Cart cleared');
             }}>
             Clear cart
           </button>
         </div>
-
-        {result ? (
-          <div>
-            <h3>Payment result</h3>
-            <pre>{JSON.stringify(result, null, 2)}</pre>
-          </div>
-        ) : null}
       </div>
     </div>
   );

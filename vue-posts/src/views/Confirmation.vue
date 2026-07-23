@@ -18,6 +18,15 @@ onMounted(() => startBridge());
   </div>
 
   <div v-else class="stack page">
+    <div class="panel success-banner stack">
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <p class="eyebrow">Payment successful</p>
+      <h1>Ticket issued</h1>
+      <p class="lede">
+        Your Awash PIN authorized this booking. Keep your PNR for check-in.
+      </p>
+    </div>
+
     <div class="panel ticket stack">
       <p class="eyebrow">Boarding pass · Habesha Airways</p>
       <h1>{{ booking.pnr }}</h1>
@@ -50,6 +59,10 @@ onMounted(() => startBridge());
         <div>
           <span class="muted">Paid</span>
           <strong>{{ formatEtb(booking.total) }}</strong>
+        </div>
+        <div v-if="booking.payment?.reference">
+          <span class="muted">Payment ref</span>
+          <strong class="mono">{{ booking.payment.reference }}</strong>
         </div>
       </div>
     </div>

@@ -1,35 +1,23 @@
 import {useEffect, useState} from 'react';
 import {Link, Route, Routes, useLocation} from 'react-router-dom';
 import ChoogaBridge, {startBridge} from './bridge.js';
+import {getCart, subscribeCart} from './cart.js';
 import Welcome from './pages/Welcome.jsx';
 import ProductList from './pages/ProductList.jsx';
 import ProductDetails from './pages/ProductDetails.jsx';
 import Checkout from './pages/Checkout.jsx';
+import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import './index.css';
 
 export default function App() {
   const location = useLocation();
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(() => getCart().cartCount);
   const showChrome = location.pathname !== '/';
 
   useEffect(() => {
     startBridge();
-    const unsub = ChoogaBridge.subscribe(state => {
-      const count = state.params?.cartCount;
-      if (typeof count === 'number') setCartCount(count);
-    });
-    const stopCart = ChoogaBridge.on('cart.updated', detail => {
-      if (detail?.cartCount != null) setCartCount(detail.cartCount);
-    });
-    ChoogaBridge.call('cart.get', {})
-      .then(res => {
-        if (res?.cartCount != null) setCartCount(res.cartCount);
-      })
-      .catch(() => {});
-    return () => {
-      unsub();
-      stopCart();
-    };
+    setCartCount(getCart().cartCount);
+    return subscribeCart(snap => setCartCount(snap.cartCount));
   }, []);
 
   return (
@@ -58,6 +46,7 @@ export default function App() {
         <Route path="/products" element={<ProductList />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/paid" element={<PaymentSuccess />} />
       </Routes>
     </div>
   );

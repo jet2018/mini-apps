@@ -4,7 +4,7 @@ Three Netlify-ready mini-apps shaped like real Awash Superapp partners — local
 
 | Folder (deploy root) | Product | Flow |
 |----------------------|---------|------|
-| [`react-store`](./react-store) | **Bole Mart** — Merkato-style shop | Welcome → catalog (ETB) → cart → PIN checkout |
+| [`react-store`](./react-store) | **Bole Mart** — Merkato-style shop | Welcome → catalog (ETB) → localStorage cart → PIN checkout |
 | [`vue-posts`](./vue-posts) | **Habesha Airways** — flight booking | Welcome → search → results → passenger → PIN ticket |
 | [`html-todos`](./html-todos) | **Tena Equb** — rotating savings (eQUB-style) | Welcome → my equbs → contribute → PIN |
 
@@ -20,7 +20,7 @@ Branding is **demo-inspired** (not official Ethiopian Airlines / eQUB / Kacha ap
 
 | App | Suggested `requested_permissions` |
 |-----|-----------------------------------|
-| Bole Mart | `payments.initiate`, `cart`, `host.progress`, `host.toast`, `user.identity`, `host.close` |
+| Bole Mart | `payments.initiate`, `host.progress`, `host.toast`, `user.identity`, `host.close` |
 | Habesha Airways | `payments.initiate`, `host.toast`, `user.identity`, `host.close` |
 | Tena Equb | `payments.initiate`, `host.toast`, `user.identity`, `host.close` |
 

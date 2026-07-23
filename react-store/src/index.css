@@ -148,7 +148,84 @@ h1, h2, h3 {
 .error { color: var(--danger); }
 
 .choice-grid { display: grid; gap: 0.65rem; }
-.choice-grid button { width: 100%; }
+.choice-grid button,
+.choice-grid .button { width: 100%; text-align: center; }
+
+a.button {
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  background: var(--ember);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.75rem 1.05rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+
+a.button.secondary {
+  background: transparent;
+  color: var(--ember-deep);
+  border: 1px solid color-mix(in srgb, var(--ember) 35%, var(--line));
+}
+
+.success-page {
+  min-height: 70vh;
+  justify-content: center;
+}
+
+.success-card {
+  text-align: center;
+  align-items: center;
+}
+
+.success-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.success-facts {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.success-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.success-facts dt {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.success-facts dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.92rem;
+}
+
+.ok-text { color: #15803d; }
 
 .chips {
   display: flex;

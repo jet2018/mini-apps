@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment successful · Tena Equb</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topnav">
+        <a class="brand" href="./index.html"><span class="mark">TE</span> Tena Equb</a>
+        <nav class="nav-links">
+          <a href="./list.html">My equbs</a>
+          <button type="button" class="ghost" id="btn-close">Close</button>
+        </nav>
+      </header>
+
+      <main class="stack success-page">
+        <div class="panel success-card stack">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <p class="eyebrow">Payment successful</p>
+          <h1>Contribution recorded</h1>
+          <p class="lede" id="blurb">Your Awash PIN authorized this equb round.</p>
+
+          <dl class="success-facts">
+            <div>
+              <dt>Equb</dt>
+              <dd id="group-name">—</dd>
+            </div>
+            <div>
+              <dt>Amount</dt>
+              <dd id="amount">—</dd>
+            </div>
+            <div>
+              <dt>Reference</dt>
+              <dd class="mono" id="reference">—</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd class="ok-text">Paid</dd>
+            </div>
+          </dl>
+
+          <div class="choice-grid">
+            <a class="button" id="details-link" href="./list.html">View equb</a>
+            <a class="button secondary" href="./list.html">My equbs</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js"></script>
+    <script src="./js/bridge.js"></script>
+    <script src="./js/data.js"></script>
+    <script src="./js/success.js"></script>
+  </body>
+</html>

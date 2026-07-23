@@ -60,8 +60,8 @@
           at: new Date().toISOString(),
           payment: payment,
         });
-        ChoogaBridge.toast('Contribution recorded', 'success');
-        window.location.href = './details.html?id=' + encodeURIComponent(group.id);
+        window.location.href =
+          './success.html?id=' + encodeURIComponent(group.id);
       })
       .catch(function (e) {
         msg.textContent = (e && e.message) || 'Payment failed';

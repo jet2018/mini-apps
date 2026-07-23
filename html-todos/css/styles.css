@@ -207,3 +207,60 @@ h1, h2 {
 
 .badge.ok { background: #dcfce7; color: var(--ok); }
 .badge.due { background: #ffedd5; color: var(--warn); }
+
+.success-page {
+  min-height: 70vh;
+  justify-content: center;
+}
+
+.success-card {
+  text-align: center;
+  align-items: center;
+}
+
+.success-icon {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #dcfce7;
+  color: var(--ok);
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.success-facts {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.success-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.success-facts dt {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.success-facts dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+.ok-text { color: var(--ok); }

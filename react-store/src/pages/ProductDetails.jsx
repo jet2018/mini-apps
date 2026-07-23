@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import ChoogaBridge, {startBridge} from '../bridge.js';
+import {addToCart} from '../cart.js';
 import {formatEtb, getProduct} from '../data/catalog.js';
 
 startBridge();
@@ -20,11 +21,11 @@ export default function ProductDetails() {
     );
   }
 
-  const addToCart = async () => {
+  const onAdd = () => {
     if (busy) return;
     setBusy(true);
     try {
-      const result = await ChoogaBridge.call('cart.add', {
+      const result = addToCart({
         id: product.id,
         title: product.title,
         price: product.price,
@@ -59,7 +60,7 @@ export default function ProductDetails() {
           <p className="price">{formatEtb(product.price)}</p>
           <p>{product.description}</p>
           <div className="row">
-            <button type="button" disabled={busy} onClick={addToCart}>
+            <button type="button" disabled={busy} onClick={onAdd}>
               {busy ? 'Adding…' : 'Add to cart'}
             </button>
             <button
