@@ -1,29 +1,38 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import ChoogaBridge, { startBridge } from '../bridge.js';
 
 const posts = ref([]);
 const loading = ref(true);
 const error = ref(null);
 
 onMounted(async () => {
+  startBridge();
+  ChoogaBridge.showProgress({ message: 'Loading posts…' });
   try {
     const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=20');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     posts.value = await res.json();
   } catch (e) {
     error.value = e.message || 'Failed to load posts';
+    ChoogaBridge.toast(error.value, 'error');
   } finally {
+    ChoogaBridge.dismissProgress();
     loading.value = false;
   }
+});
+
+onUnmounted(() => {
+  ChoogaBridge.dismissProgress();
 });
 </script>
 
 <template>
   <div class="stack">
     <div>
-      <h1>JSONPlaceholder Posts</h1>
-      <p class="muted">Listing from jsonplaceholder.typicode.com</p>
+      <h1>Posts</h1>
+      <p class="muted">Pick a post to read, or compose a new one.</p>
     </div>
 
     <p v-if="loading" class="muted">Loading posts…</p>

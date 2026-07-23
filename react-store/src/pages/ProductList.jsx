@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import ChoogaBridge, {startBridge} from '../bridge.js';
 
 const API = 'https://fakestoreapi.com/products';
 
@@ -9,8 +10,10 @@ export default function ProductList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    startBridge();
     let cancelled = false;
     (async () => {
+      ChoogaBridge.showProgress({message: 'Loading products…'});
       try {
         const res = await fetch(API);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -19,11 +22,13 @@ export default function ProductList() {
       } catch (e) {
         if (!cancelled) setError(e.message || 'Failed to load products');
       } finally {
+        ChoogaBridge.dismissProgress();
         if (!cancelled) setLoading(false);
       }
     })();
     return () => {
       cancelled = true;
+      ChoogaBridge.dismissProgress();
     };
   }, []);
 
@@ -33,8 +38,8 @@ export default function ProductList() {
   return (
     <div className="stack">
       <div>
-        <h1>Fake Store</h1>
-        <p className="muted">Products from fakestoreapi.com — tap a card for details.</p>
+        <h1>Products</h1>
+        <p className="muted">Tap a product to add it to your host cart.</p>
       </div>
       <div className="card-grid">
         {products.map(p => (

@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
+import ChoogaBridge, { startBridge } from '../bridge.js';
 
 const props = defineProps({
   id: { type: [String, Number], required: true },
@@ -12,10 +13,12 @@ const loading = ref(true);
 const error = ref(null);
 
 async function load() {
+  startBridge();
   loading.value = true;
   error.value = null;
   post.value = null;
   author.value = null;
+  ChoogaBridge.showProgress({ message: 'Loading post…' });
   try {
     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${props.id}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -24,18 +27,21 @@ async function load() {
     if (userRes.ok) author.value = await userRes.json();
   } catch (e) {
     error.value = e.message || 'Failed to load post';
+    ChoogaBridge.toast(error.value, 'error');
   } finally {
+    ChoogaBridge.dismissProgress();
     loading.value = false;
   }
 }
 
 onMounted(load);
 watch(() => props.id, load);
+onUnmounted(() => ChoogaBridge.dismissProgress());
 </script>
 
 <template>
   <div class="stack">
-    <RouterLink to="/">← Back to list</RouterLink>
+    <RouterLink to="/posts">← Back to posts</RouterLink>
 
     <p v-if="loading" class="muted">Loading post…</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
@@ -46,7 +52,6 @@ watch(() => props.id, load);
         By {{ author.name }} ({{ author.email }}) · user #{{ post.userId }}
       </p>
       <p>{{ post.body }}</p>
-      <pre>{{ JSON.stringify(post, null, 2) }}</pre>
     </div>
   </div>
 </template>

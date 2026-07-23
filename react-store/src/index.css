@@ -80,6 +80,47 @@ button:disabled {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.welcome-panel {
+  min-height: 70vh;
+  justify-content: center;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--chooga-primary);
+  margin: 0;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.choice-grid button {
+  width: 100%;
+}
+
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cart-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .card-grid {
@@ -176,38 +217,6 @@ pre,
   padding: 0.75rem;
   font-size: 0.78rem;
   overflow: auto;
-}
-
-.host-panel {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: color-mix(in srgb, var(--surface) 92%, var(--chooga-primary));
-  border: 1px solid color-mix(in srgb, var(--chooga-primary) 25%, var(--border));
-  border-radius: 14px;
-  padding: 0.85rem;
-  margin-bottom: 1rem;
-  backdrop-filter: blur(8px);
-}
-
-.host-panel details summary {
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.status-pill {
-  display: inline-block;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  background: color-mix(in srgb, var(--chooga-primary) 18%, white);
-  color: var(--chooga-primary);
-}
-
-.status-pill.off {
-  background: #fee4e2;
-  color: var(--danger);
 }
 
 .detail-layout {

@@ -1,34 +1,37 @@
 # Chooga demo mini-apps
 
-Three Netlify-ready mini-apps that exercise the **Chooga bridge v1** contract used by Awash Birr Pro’s Superapp host (`Application/Screens/Superapp`).
+Three Netlify-ready mini-apps for Awash Birr Pro’s Superapp host. Each boots on **`@jetezra/bridge@0.0.2`**, greets the host user by name, and only uses real product actions (progress, toast, cart, PIN payments)—no HostPanel / bridge playground.
 
-| App | Stack | Dummy API | Pages |
-|-----|--------|-----------|--------|
-| [`react-store`](./react-store) | Vite + React + React Router | [Fake Store](https://fakestoreapi.com) | List → Details → Checkout form |
-| [`vue-posts`](./vue-posts) | Vite + Vue 3 + Vue Router | [JSONPlaceholder](https://jsonplaceholder.typicode.com) posts | List → Details → Compose form |
-| [`html-todos`](./html-todos) | Plain HTML/CSS/JS | JSONPlaceholder todos | List → Details → Add form |
+| App | Stack | Dummy API | Flow |
+|-----|--------|-----------|------|
+| [`react-store`](./react-store) | Vite + React | [Fake Store](https://fakestoreapi.com) | Welcome → products → cart → `payments.initiate` (PIN) |
+| [`vue-posts`](./vue-posts) | Vite + Vue 3 | [JSONPlaceholder](https://jsonplaceholder.typicode.com) posts | Welcome → browse / compose |
+| [`html-todos`](./html-todos) | Plain HTML/CSS/JS | JSONPlaceholder todos | Welcome → list / add |
 
-Shared client: [`shared/chooga-bridge.js`](./shared/chooga-bridge.js) (vendored into each app).
+## Bridge
 
-## Bridge behavior
+- **Vite apps:** `npm install @jetezra/bridge@0.0.2` → `import ChoogaBridge from '@jetezra/bridge'`
+- **HTML:** CDN `https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js`
+- **Browser demos:** `mockHost({…})` before `init()` when not inside `ReactNativeWebView`
+- Host injects session, user, theme, safe area, hostInfo after `chooga.ready`
 
-On load each app calls `chooga.ready`. The host then injects:
+## Welcome → product
 
-- `chooga.session` — JWT + `expires_at`
-- `chooga.user` — sanitized claims
-- `chooga.theme` — `mode`, `primary_color` (also CSS `--chooga-primary`)
-- `chooga.safeArea` — insets
+1. Welcome greets `user.display_name` / `user.name` and offers choose-how-to-proceed.
+2. Product screens call host APIs only as needed (`showProgress`, `toast`, `cart.*`, `payments.initiate`, `close`).
+3. **react-store** owns the PIN path: checkout → `payments.initiate` → host `PinScreenModal` → success bag (no live debit in this pass).
 
-Mini-app → host buttons:
+## Catalog permissions
 
-| Button | Message |
-|--------|---------|
-| Request identity | `chooga.requestCapability` / `user.identity` |
-| Request phone | `chooga.requestCapability` / `user.phone` |
-| Open docs | `chooga.openExternal` (https URL) |
-| Close mini-app | `chooga.close` |
+Suggested `requested_permissions` when registering in Chooga:
 
-Standalone browser mode works without the host (`Host bridge: standalone`); API data still loads.
+| App | Permissions |
+|-----|-------------|
+| react-store | `payments.initiate`, `cart`, `host.progress`, `host.toast`, `wallet.pick`, `user.identity`, `host.close` |
+| vue-posts | `host.progress`, `host.toast`, `user.identity`, `host.close` |
+| html-todos | `host.progress`, `host.toast`, `user.identity`, `host.close` |
+
+Also set `bridge_version` to `1`, `requires_auth` to `true`, and `web_view_base_url` / `allowed_origins` to each Netlify origin.
 
 ## Local run
 
@@ -41,70 +44,19 @@ cd vue-posts && npm install && npm run dev
 
 # HTML (any static server)
 cd html-todos && npx serve .
-# or: python3 -m http.server 5175
 ```
 
-## Netlify deploy
+## Netlify
 
-Deploy **three separate sites** (one origin each):
-
-| Site base directory | Build command | Publish |
-|---------------------|---------------|---------|
+| Site base | Build | Publish |
+|-----------|-------|---------|
 | `react-store` | `npm run build` | `dist` |
 | `vue-posts` | `npm run build` | `dist` |
-| `html-todos` | *(none / echo)* | `.` |
+| `html-todos` | *(none)* | `.` |
 
-Each folder already has a `netlify.toml`. After deploy, copy the three `https://….netlify.app` URLs.
+## Test in Awash
 
-CLI example:
-
-```bash
-# from each app folder
-npx netlify deploy --prod
-```
-
-## Register in Chooga (so Awash can open them)
-
-Mini-apps are loaded from the catalog via `web_view_base_url` — the host does not discover Netlify URLs automatically.
-
-In Chooga Developer / Admin, create (or update) three mini-apps:
-
-| Field | Value |
-|-------|--------|
-| `web_view_base_url` | Netlify URL for that app (https) |
-| `allowed_origins` | Same origin as the Netlify URL |
-| `requested_permissions` | `user.identity`, `user.phone`, `host.openExternal`, `host.close` |
-| `bridge_version` | `1` |
-| `requires_auth` | `true` |
-| Status | `testing` (non-PROD host merges testing + production) |
-
-Suggested display names:
-
-- Chooga React Store
-- Chooga Vue Posts
-- Chooga HTML Todos
-
-## Test in Awash Birr Pro
-
-1. Ensure the mobile host points at your Chooga environment (`SUPER_URL` / keys in app config).
-2. Open Superapp catalog → pull to refresh / wait for background sync.
-3. Find each demo app → **Download** → allow the four permissions.
-4. **Open** → confirm Host bridge shows session, user, theme, safe area.
-5. Tap capability / open docs / close buttons and confirm host responses.
-
-## Layout
-
-```
-chooga-demo-mini-apps/
-  README.md
-  shared/chooga-bridge.js
-  react-store/
-  vue-posts/
-  html-todos/
-```
-
-After editing `shared/chooga-bridge.js`, re-copy into:
-
-- `react-store/src/chooga-bridge.js`
-- `vue-posts/src/chooga-bridge.js`
-- `html-todos/js/chooga-bridge.js` (strip the trailing `export` lines for classic scripts)
+1. Register / update the three mini-apps in Chooga; sync Superapp catalog.
+2. Open an app → **Welcome, {name}** with path choices (no HostPanel).
+3. Store: add to cart → checkout → enter PIN → success result.
+4. Posts / todos: list and compose with host progress / toast.

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo details · Chooga HTML</title>
+    <title>Todos · Chooga HTML</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
@@ -19,14 +19,29 @@
       </header>
 
       <main class="stack">
-        <a href="./list.html">← Back to list</a>
+        <div>
+          <h1>Todos</h1>
+          <p class="muted">Data from jsonplaceholder.typicode.com/todos</p>
+        </div>
+
+        <div class="row">
+          <label>
+            Filter
+            <select id="filter">
+              <option value="all">All</option>
+              <option value="open">Incomplete</option>
+              <option value="done">Completed</option>
+            </select>
+          </label>
+        </div>
+
         <p id="status" class="muted">Loading…</p>
-        <div id="detail" class="panel stack" hidden></div>
+        <div id="list" class="todo-list"></div>
       </main>
     </div>
 
     <script src="https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js"></script>
     <script src="./js/bridge.js"></script>
-    <script src="./js/details.js"></script>
+    <script src="./js/list.js"></script>
   </body>
 </html>

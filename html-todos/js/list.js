@@ -1,8 +1,14 @@
 (function () {
+  var ChoogaBridge = window.ChoogaDemo.startBridge();
   var allTodos = [];
   var listEl = document.getElementById('list');
   var statusEl = document.getElementById('status');
   var filterEl = document.getElementById('filter');
+  var closeBtn = document.getElementById('btn-close');
+
+  closeBtn.addEventListener('click', function () {
+    ChoogaBridge.close();
+  });
 
   function render() {
     var filter = filterEl.value;
@@ -47,6 +53,7 @@
 
   filterEl.addEventListener('change', render);
 
+  ChoogaBridge.showProgress({ message: 'Loading todos…' });
   fetch('https://jsonplaceholder.typicode.com/todos?_limit=40')
     .then(function (res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -59,5 +66,9 @@
     .catch(function (e) {
       statusEl.className = 'error';
       statusEl.textContent = 'Error: ' + (e.message || 'Failed to load');
+      ChoogaBridge.toast(statusEl.textContent, 'error');
+    })
+    .finally(function () {
+      ChoogaBridge.dismissProgress();
     });
 })();

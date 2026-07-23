@@ -1,19 +1,28 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import HostPanel from './components/HostPanel.vue';
+import { computed } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
+import ChoogaBridge, { startBridge } from './bridge.js';
+
+startBridge();
+
+const route = useRoute();
+const showChrome = computed(() => route.path !== '/');
 </script>
 
 <template>
   <div class="app-shell">
-    <header class="topnav">
+    <header v-if="showChrome" class="topnav">
       <div class="brand">Chooga · Vue Posts</div>
       <nav class="nav-links">
-        <RouterLink to="/">Posts</RouterLink>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/posts">Posts</RouterLink>
         <RouterLink to="/compose">Compose</RouterLink>
+        <button type="button" class="secondary" @click="ChoogaBridge.close()">
+          Close
+        </button>
       </nav>
     </header>
 
-    <HostPanel />
     <RouterView />
   </div>
 </template>

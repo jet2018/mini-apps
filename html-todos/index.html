@@ -8,71 +8,26 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="topnav">
-        <div class="brand">Chooga · HTML Todos</div>
-        <nav class="nav-links">
-          <a href="./index.html">List</a>
-          <a href="./form.html">Add todo</a>
-        </nav>
-      </header>
-
-      <section class="host-panel">
-        <details open>
-          <summary>
-            Host bridge <span id="host-status" class="status-pill off">standalone</span>
-          </summary>
-          <div class="stack" style="margin-top: 0.75rem">
-            <div id="host-meta" class="muted">Ready sent: —</div>
-            <div>
-              <strong>Session</strong>
-              <pre id="host-session">null</pre>
-            </div>
-            <div>
-              <strong>User</strong>
-              <pre id="host-user">null</pre>
-            </div>
-            <div>
-              <strong>Safe area</strong>
-              <pre id="host-safe">null</pre>
-            </div>
-            <div>
-              <strong>Last capability</strong>
-              <pre id="host-cap">null</pre>
-            </div>
-            <div class="row">
-              <button type="button" id="btn-identity">Request identity</button>
-              <button type="button" id="btn-phone">Request phone</button>
-              <button type="button" class="secondary" id="btn-docs">Open docs</button>
-              <button type="button" class="secondary" id="btn-close">Close mini-app</button>
-            </div>
+      <main class="stack welcome-panel">
+        <div class="panel stack">
+          <p class="eyebrow">Chooga Todos</p>
+          <h1>Welcome, <span id="welcome-name">there</span></h1>
+          <p id="welcome-subtitle" class="muted">
+            Choose how you want to continue.
+          </p>
+          <div class="choice-grid">
+            <a class="button" href="./list.html">My todos</a>
+            <a class="button secondary" href="./form.html">Add todo</a>
           </div>
-        </details>
-      </section>
-
-      <main class="stack">
-        <div>
-          <h1>Todos</h1>
-          <p class="muted">Data from jsonplaceholder.typicode.com/todos</p>
+          <button type="button" class="secondary" id="btn-close" hidden>
+            Close mini-app
+          </button>
         </div>
-
-        <div class="row">
-          <label>
-            Filter
-            <select id="filter">
-              <option value="all">All</option>
-              <option value="open">Incomplete</option>
-              <option value="done">Completed</option>
-            </select>
-          </label>
-        </div>
-
-        <p id="status" class="muted">Loading…</p>
-        <div id="list" class="todo-list"></div>
       </main>
     </div>
 
-    <script src="./js/chooga-bridge.js"></script>
-    <script src="./js/host-panel.js"></script>
-    <script src="./js/list.js"></script>
+    <script src="https://unpkg.com/@jetezra/bridge@0.0.2/dist/chooga-bridge.min.js"></script>
+    <script src="./js/bridge.js"></script>
+    <script src="./js/welcome.js"></script>
   </body>
 </html>
