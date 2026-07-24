@@ -16,8 +16,7 @@
     return;
   }
 
-  var paid =
-    window.EqubStore.isPaid(group.id) || group.yourStatus === 'paid';
+  var paid = window.EqubStore.isPaid(group.id);
 
   statusEl.hidden = true;
   detailEl.hidden = false;
@@ -60,6 +59,7 @@
     '<h2>Members</h2>' +
     group.membersPreview
       .map(function (m) {
+        var memberPaid = m.name === 'You' ? paid : m.paid;
         return (
           '<div class="member-row">' +
           '<div><strong>' +
@@ -68,9 +68,9 @@
           m.role +
           '</span></div>' +
           '<span class="badge ' +
-          (m.paid ? 'ok' : 'due') +
+          (memberPaid ? 'ok' : 'due') +
           '">' +
-          (m.paid ? 'Paid' : 'Due') +
+          (memberPaid ? 'Paid' : 'Due') +
           '</span></div>'
         );
       })

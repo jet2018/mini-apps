@@ -4,7 +4,7 @@
   var formatEtb = window.ChoogaDemo.formatEtb;
 
   function statusLabel(group) {
-    if (window.EqubStore.isPaid(group.id) || group.yourStatus === 'paid') {
+    if (window.EqubStore.isPaid(group.id)) {
       return '<span class="badge ok">Paid this round</span>';
     }
     return '<span class="badge due">Contribution due</span>';

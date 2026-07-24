@@ -4,6 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import {
   airportLabel,
   formatEtb,
+  rememberFlight,
   searchFlights,
 } from '../data/flights.js';
 import { startBridge } from '../bridge.js';
@@ -35,11 +36,18 @@ onMounted(() => {
 });
 
 function selectFlight(flight) {
-  const q = new URLSearchParams({
-    ...query.value,
-    pax: String(query.value.pax),
+  rememberFlight(flight);
+  router.push({
+    name: 'book',
+    query: {
+      flightNo: flight.flightNo,
+      from: flight.from,
+      to: flight.to,
+      date: flight.date,
+      cabin: flight.cabin,
+      pax: String(query.value.pax),
+    },
   });
-  router.push(`/flight/${encodeURIComponent(flight.id)}?${q.toString()}`);
 }
 </script>
 

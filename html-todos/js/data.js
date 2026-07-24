@@ -36,12 +36,12 @@ window.EQUB_DATA = {
       nextDue: '2026-07-26',
       pot: 50000,
       status: 'active',
-      yourStatus: 'paid',
+      yourStatus: 'due',
       description:
         'Weekly equb for shop owners around Addis Merkato. Cash-out via Awash.',
       membersPreview: [
         {name: 'Abdi Mohammed', role: 'Sebabi', paid: true},
-        {name: 'You', role: 'Member', paid: true},
+        {name: 'You', role: 'Member', paid: false},
         {name: 'Liya Getachew', role: 'Member', paid: true},
       ],
     },

@@ -8,7 +8,7 @@ const route = useRoute();
 
 const isHome = computed(() => route.path === '/');
 const isSearch = computed(() =>
-  ['/search', '/results'].includes(route.path) || route.path.startsWith('/flight'),
+  ['/search', '/results', '/book'].includes(route.path),
 );
 const isBookings = computed(() =>
   route.path === '/bookings' || route.path.startsWith('/confirmation'),

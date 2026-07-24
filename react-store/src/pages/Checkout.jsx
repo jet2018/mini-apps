@@ -91,7 +91,7 @@ export default function Checkout() {
 
         <p className="price">{formatEtb(totalLabel)}</p>
 
-        <div className="row">
+        <div className="checkout-actions">
           <button
             type="button"
             disabled={paying || !cart.items.length}
@@ -101,7 +101,7 @@ export default function Checkout() {
           <button
             type="button"
             className="secondary"
-            disabled={!cart.items.length}
+            disabled={paying || !cart.items.length}
             onClick={() => {
               clearCart();
               ChoogaBridge.toast('Cart cleared');

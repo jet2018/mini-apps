@@ -4,7 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import {
   airportLabel,
   formatEtb,
-  getFlightById,
+  resolveFlight,
 } from '../data/flights.js';
 import ChoogaBridge, { displayNameFromUser, startBridge } from '../bridge.js';
 import { saveBooking } from '../data/bookings.js';
@@ -14,11 +14,31 @@ const router = useRouter();
 const paying = ref(false);
 const bridge = ref(ChoogaBridge.getState());
 
-const flight = computed(() => getFlightById(route.params.id));
+const flight = computed(() =>
+  resolveFlight({
+    flightNo: String(route.query.flightNo || ''),
+    from: String(route.query.from || ''),
+    to: String(route.query.to || ''),
+    date: String(route.query.date || ''),
+    cabin: String(route.query.cabin || 'economy'),
+  }),
+);
+
 const pax = computed(() => Number(route.query.pax || 1));
 const total = computed(() =>
   flight.value ? flight.value.fare * pax.value : 0,
 );
+
+const resultsQuery = computed(() => {
+  const q = {
+    from: String(route.query.from || ''),
+    to: String(route.query.to || ''),
+    date: String(route.query.date || ''),
+    cabin: String(route.query.cabin || 'economy'),
+    pax: String(route.query.pax || 1),
+  };
+  return `/results?${new URLSearchParams(q).toString()}`;
+});
 
 const passenger = reactive({
   fullName: '',
@@ -90,9 +110,7 @@ async function pay() {
   </div>
 
   <div v-else class="stack page">
-    <RouterLink :to="`/results?${new URLSearchParams(route.query).toString()}`">
-      ← Back to results
-    </RouterLink>
+    <RouterLink :to="resultsQuery">← Back to results</RouterLink>
 
     <div class="panel stack">
       <p class="eyebrow">{{ flight.airline }} · {{ flight.flightNo }}</p>

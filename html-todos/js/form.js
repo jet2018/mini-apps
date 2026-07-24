@@ -23,7 +23,7 @@
     'Round ' + group.round + ' of ' + group.totalRounds + ' · due ' + group.nextDue;
   document.getElementById('amount').textContent = formatEtb(group.contribution);
 
-  if (window.EqubStore.isPaid(group.id) || group.yourStatus === 'paid') {
+  if (window.EqubStore.isPaid(group.id)) {
     payBtn.disabled = true;
     payBtn.textContent = 'Already paid';
     msg.textContent = 'This round is settled on this device.';

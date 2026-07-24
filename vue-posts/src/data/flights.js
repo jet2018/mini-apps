@@ -14,6 +14,7 @@ export const AIRPORTS = [
 ];
 
 const pad = n => String(n).padStart(2, '0');
+const SELECTED_KEY = 'habesha_air_selected_flight_v1';
 
 export function formatEtb(amount) {
   return `ETB ${Number(amount).toLocaleString('en-ET', {
@@ -55,7 +56,7 @@ export function searchFlights({from, to, date, cabin = 'economy'}) {
     const seats = 4 + ((i * 3 + from.charCodeAt(0) + to.charCodeAt(0)) % 18);
 
     return {
-      id: `${t.flight}-${from}${to}-${date}-${cabin}`,
+      id: [t.flight, from, to, date, cabin].join('__'),
       flightNo: t.flight,
       airline: 'Habesha Airways',
       from,
@@ -77,21 +78,62 @@ export function searchFlights({from, to, date, cabin = 'economy'}) {
   });
 }
 
-export function getFlightById(id) {
-  if (!id) return null;
-  const parts = String(id).split('-');
-  // HA210-ADDDIR-2026-07-24-economy
-  if (parts.length < 4) return null;
-  const flightNo = parts[0];
-  const route = parts[1];
-  const from = route.slice(0, 3);
-  const to = route.slice(3, 6);
-  const date = `${parts[2]}-${parts[3]}-${parts[4]}`;
-  const cabin = parts[5] || 'economy';
-  return (
-    searchFlights({from, to, date, cabin}).find(f => f.flightNo === flightNo) ||
-    null
-  );
+export function rememberFlight(flight) {
+  try {
+    sessionStorage.setItem(SELECTED_KEY, JSON.stringify(flight));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readRememberedFlight() {
+  try {
+    const raw = sessionStorage.getItem(SELECTED_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Resolve a flight from query params, remembered selection, or id. */
+export function resolveFlight({flightNo, from, to, date, cabin, id} = {}) {
+  const remembered = readRememberedFlight();
+  if (
+    remembered &&
+    (!flightNo || remembered.flightNo === flightNo) &&
+    (!from || remembered.from === from) &&
+    (!to || remembered.to === to) &&
+    (!date || remembered.date === date) &&
+    (!cabin || remembered.cabin === cabin)
+  ) {
+    return remembered;
+  }
+
+  if (flightNo && from && to && date) {
+    const match = searchFlights({
+      from,
+      to,
+      date,
+      cabin: cabin || 'economy',
+    }).find(f => f.flightNo === flightNo);
+    if (match) return match;
+  }
+
+  if (id) {
+    const parts = String(id).split('__');
+    if (parts.length >= 5) {
+      return (
+        searchFlights({
+          from: parts[1],
+          to: parts[2],
+          date: parts[3],
+          cabin: parts[4] || 'economy',
+        }).find(f => f.flightNo === parts[0]) || null
+      );
+    }
+  }
+
+  return null;
 }
 
 export function defaultTravelDate() {
