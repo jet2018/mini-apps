@@ -72,18 +72,35 @@ window.EqubStore = {
   KEY: 'chooga_equb_payments_v1',
   load: function () {
     try {
-      return JSON.parse(localStorage.getItem(this.KEY) || '{}');
+      var raw = localStorage.getItem(this.KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : {};
     } catch (e) {
       return {};
     }
   },
   markPaid: function (groupId, payload) {
+    var id = String(groupId || '');
+    if (!id) return this.load();
     var map = this.load();
-    map[groupId] = payload;
-    localStorage.setItem(this.KEY, JSON.stringify(map));
+    map[id] = Object.assign({at: new Date().toISOString()}, payload || {});
+    try {
+      localStorage.setItem(this.KEY, JSON.stringify(map));
+    } catch (e) {
+      /* quota / private mode */
+    }
     return map;
   },
   isPaid: function (groupId) {
-    return !!this.load()[groupId];
+    var id = String(groupId || '');
+    if (!id) return false;
+    var row = this.load()[id];
+    return !!(row && (row.payment || row.at));
+  },
+  getPayment: function (groupId) {
+    var id = String(groupId || '');
+    if (!id) return null;
+    return this.load()[id] || null;
   },
 };

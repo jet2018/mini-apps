@@ -5,7 +5,16 @@
 
   function statusLabel(group) {
     if (window.EqubStore.isPaid(group.id)) {
-      return '<span class="badge ok">Paid this round</span>';
+      var saved = window.EqubStore.getPayment(group.id) || {};
+      var ref =
+        saved.payment && saved.payment.reference
+          ? saved.payment.reference
+          : '';
+      return (
+        '<span class="badge ok">Paid this round' +
+        (ref ? ' · ' + ref : '') +
+        '</span>'
+      );
     }
     return '<span class="badge due">Contribution due</span>';
   }
