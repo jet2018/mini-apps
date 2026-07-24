@@ -52,7 +52,7 @@ export default function PaymentSuccess() {
           </div>
         </dl>
 
-        <div className="choice-grid">
+        <div className="success-actions">
           <Link className="button" to="/products">
             Continue shopping
           </Link>
